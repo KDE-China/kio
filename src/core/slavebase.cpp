@@ -148,7 +148,7 @@ public:
     void updateTempAuthStatus()
     {
 #ifdef Q_OS_UNIX
-        QSet<QString>::const_iterator it = m_tempAuths.begin();
+        QSet<QString>::iterator it = m_tempAuths.begin();
         while (it != m_tempAuths.end()) {
             KAuth::Action action(*it);
             if (action.status() != KAuth::Action::AuthorizedStatus) {

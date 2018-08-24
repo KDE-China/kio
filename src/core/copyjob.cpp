@@ -576,7 +576,9 @@ void CopyJobPrivate::slotReport()
     case STATE_RENAMING:
         q->setTotalAmount(KJob::Files, m_srcList.count());
     // fall-through intended
+#if QT_VERSION >= 0x050800
         Q_FALLTHROUGH();
+#endif
     case STATE_COPYING_FILES:
         q->setProcessedAmount(KJob::Files, m_processedFiles);
         if (m_bURLDirty) {
@@ -1468,7 +1470,9 @@ void CopyJobPrivate::slotResultErrorCopyingFiles(KJob *job)
     case Result_AutoRename:
         m_bAutoRenameFiles = true;
     // fall through
+#if QT_VERSION >= 0x050800
         Q_FALLTHROUGH();
+#endif
     case Result_Rename: {
         QUrl newUrl((*it).uDest);
         newUrl.setPath(newPath);
@@ -1483,7 +1487,9 @@ void CopyJobPrivate::slotResultErrorCopyingFiles(KJob *job)
     case Result_AutoSkip:
         m_bAutoSkipFiles = true;
     // fall through
+#if QT_VERSION >= 0x050800
         Q_FALLTHROUGH();
+#endif
     case Result_Skip:
         // Move on to next file
         skip((*it).uSource, false);
@@ -2030,7 +2036,9 @@ void CopyJobPrivate::slotResultRenaming(KJob *job)
                         m_bAutoRenameFiles = true;
                     }
                 // fall through
+#if QT_VERSION >= 0x050800
                     Q_FALLTHROUGH();
+#endif
                 case Result_Rename: {
                     // Set m_dest to the chosen destination
                     // This is only for this src url; the next one will revert to m_globalDest
@@ -2048,7 +2056,9 @@ void CopyJobPrivate::slotResultRenaming(KJob *job)
                         m_bAutoSkipFiles = true;
                     }
                 // fall through
+#if QT_VERSION >= 0x050800
                     Q_FALLTHROUGH();
+#endif
                 case Result_Skip:
                     // Move on to next url
                     skipSrc(isDir);

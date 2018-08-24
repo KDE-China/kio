@@ -130,22 +130,38 @@ public:
             connect(combo, &QComboBox::editTextChanged,
                     receiver, &KUrlRequester::textEdited);
 
+#if QT_VERSION >= 0x050700
             connect(combo, QOverload<>::of(&KComboBox::returnPressed),
                     receiver, QOverload<>::of(&KUrlRequester::returnPressed));
             connect(combo, QOverload<const QString&>::of(&KComboBox::returnPressed),
                     receiver, QOverload<const QString&>::of(&KUrlRequester::returnPressed));
+#else
+            connect(combo, SIGNAL(returnPressed()),
+                    receiver, SIGNAL(returnPressed()));
+            connect(combo, SIGNAL(returnPressed(QString)),
+                    receiver, SIGNAL(returnPressed(QString)));
+#endif
         } else if (edit) {
             connect(edit, &QLineEdit::textChanged,
                     receiver, &KUrlRequester::textChanged);
             connect(edit, &QLineEdit::textEdited,
                     receiver, &KUrlRequester::textEdited);
 
+#if QT_VERSION >= 0x050700
             connect(edit, QOverload<>::of(&QLineEdit::returnPressed),
                     receiver, QOverload<>::of(&KUrlRequester::returnPressed));
+#else
+            connect(edit, SIGNAL(returnPressed()), receiver, SLOT(returnPressed()));
+#endif
 
             if (auto kline = qobject_cast<KLineEdit*>(edit)) {
+#if QT_VERSION >= 0x050700
                 connect(kline, QOverload<const QString&>::of(&KLineEdit::returnPressed),
                         receiver, QOverload<const QString&>::of(&KUrlRequester::returnPressed));
+#else
+		connect(kline, SIGNAL(returnPressed(QString)),
+			receiver, SLOT(returnPressed(QString)));
+#endif
             }
         }
     }

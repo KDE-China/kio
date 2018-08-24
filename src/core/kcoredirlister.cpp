@@ -69,7 +69,11 @@ KCoreDirListerCache::KCoreDirListerCache()
     connect(kdirnotify, &org::kde::KDirNotify::FileRenamedWithLocalPath, this, &KCoreDirListerCache::slotFileRenamed);
     connect(kdirnotify, &org::kde::KDirNotify::FilesAdded  , this, &KCoreDirListerCache::slotFilesAdded);
     connect(kdirnotify, &org::kde::KDirNotify::FilesChanged, this, &KCoreDirListerCache::slotFilesChanged);
+#if QT_VERSION >= 0x050700
     connect(kdirnotify, &org::kde::KDirNotify::FilesRemoved, this, QOverload<const QStringList&>::of(&KCoreDirListerCache::slotFilesRemoved));
+#else
+    connect(kdirnotify, SIGNAL(FilesRemoved(QStringList)), SLOT(slotFilesRemoved(QStringList)));
+#endif
 
     // Probably not needed in KF5 anymore:
     // The use of KUrl::url() in ~DirItem (sendSignal) crashes if the static for QRegExpEngine got deleted already,
@@ -2696,8 +2700,13 @@ void KCoreDirLister::Private::connectJob(KIO::ListJob *job)
 {
     m_parent->connect(job, &KJob::infoMessage, m_parent,
         [this](KJob *job, const QString &plain){ _k_slotInfoMessage(job, plain); });
+#if QT_VERSION >= 0x050700
     m_parent->connect(job, QOverload<KJob*, ulong>::of(&KJob::percent), m_parent,
         [this](KJob *job, ulong _percent){ _k_slotPercent(job, _percent); });
+#else
+    m_parent->connect(job, SIGNAL(percent(KJob*,ulong)),
+                      m_parent, SLOT(_k_slotPercent(KJob*,ulong)));
+#endif
     m_parent->connect(job, &KJob::totalSize, m_parent,
         [this](KJob *job, qulonglong _size){ _k_slotTotalSize(job, _size); });
     m_parent->connect(job, &KJob::processedSize, m_parent,

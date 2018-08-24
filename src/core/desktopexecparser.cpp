@@ -76,7 +76,9 @@ int KRunMX1::expandEscapedMacro(const QString &str, int pos, QStringList &ret)
     case 'u':
     case 'U':
         hasUrls = true;
+#if QT_VERSION >= 0x050800
         Q_FALLTHROUGH();
+#endif
     /* fallthrough */
     case 'f':
     case 'F':
@@ -86,7 +88,9 @@ int KRunMX1::expandEscapedMacro(const QString &str, int pos, QStringList &ret)
     case 'D':
     case 'v':
         hasSpec = true;
+#if QT_VERSION >= 0x050800
         Q_FALLTHROUGH();
+#endif
     /* fallthrough */
     default:
         return -2; // subst with same and skip

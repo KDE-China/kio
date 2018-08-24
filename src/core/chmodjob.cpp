@@ -216,7 +216,9 @@ void ChmodJobPrivate::_k_chmodNextFile()
                     case Result_AutoSkip:
                         m_bAutoSkipFiles = true;
                     // fall through
+#if QT_VERSION >= 0x050800
                         Q_FALLTHROUGH();
+#endif
                     case Result_Skip:
                         QMetaObject::invokeMethod(q, "_k_chmodNextFile", Qt::QueuedConnection);
                         return;

@@ -314,7 +314,9 @@ QByteArray JobPrivate::privilegeOperationData()
                 m_caption = i18n("Transfer data");
                 m_message = i18n("Root privileges are required to complete transferring data. "
                                  "Do you want to continue?");
+#if QT_VERSION >= 0x050800
                 Q_FALLTHROUGH();
+#endif
             default:
                 break;
             }
